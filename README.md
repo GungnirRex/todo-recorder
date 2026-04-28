@@ -1,4 +1,4 @@
-# 代办事项记录网页
+# 小段的待办事项记录\("▔□▔)/
 
 这是一个纯静态网页应用，直接打开 `index.html` 即可使用。要让对方在自己的网络下打开，需要部署到公网静态托管服务，例如 GitHub Pages、Vercel、Netlify 或 Cloudflare Pages。
 
