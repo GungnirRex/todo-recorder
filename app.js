@@ -165,30 +165,42 @@
     return compactText(candidate.replace(/^(hi|你好|收到|备注|todo|待办)[:：\s-]*/i, ""), 64);
   }
 
-  function inferInsight(text, dueTime) {
+  function cleanKeyPoint(text) {
+    return cleanText(text)
+      .replace(/^.*?(?:事项|要点|总结|待办)[:：]\s*/i, "")
+      .replace(/(?:^|[｜|]\s*)(?:时间|相关人|类型|补充)[:：][^｜|]*/g, "")
+      .replace(/^@?[\u4e00-\u9fa5A-Za-z0-9_-]{1,12}[:：]\s*/, "")
+      .replace(/^(hi|你好|大家好|收到|备注|todo|待办)[:：\s-]*/i, "")
+      .replace(/^(请|麻烦|辛苦|帮忙|需要|记得|请尽快|麻烦尽快)\s*/, "")
+      .replace(/\s*[｜|]\s*/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function extractKeyPoint(text) {
     const value = cleanText(text);
     if (!value) return "";
     const sentences = splitSentences(value);
-    const summary = inferSummary(value);
-    const people = Array.from(new Set((value.match(/@?[\u4e00-\u9fa5]{2,4}(?=(?:老师|同学|经理|总|主任|负责人|那边|这边|，|,|：|:))/g) || []).slice(0, 3)));
-    const keywords = [
-      ["会议", /会议|开会|会前|会后/],
-      ["资料", /资料|文档|表格|文件|PPT|方案|报告/],
-      ["沟通", /沟通|对接|确认|回复|反馈|联系/],
-      ["交付", /提交|交付|完成|上线|发布|发出/],
-      ["风险", /延期|风险|问题|阻塞|紧急|尽快/],
-    ]
-      .filter(([, pattern]) => pattern.test(value))
-      .map(([label]) => label);
+    const actionPattern = /(需要|请|麻烦|记得|安排|完成|提交|确认|跟进|处理|整理|发送|发给|回复|预约|开会|对接|更新|准备|检查|修改|补充|同步|通知|联系|推进|交付|上线|发布)/;
+    const deadlinePattern = /(今天|明天|后天|本周|这周|下周|月底|\d{1,2}月\d{1,2}[日号]?|\d{1,2}[:：点时])/;
 
-    const details = sentences.filter((line) => line !== summary).slice(0, 1).map((line) => compactText(line, 56));
+    const ranked = sentences
+      .map((line, index) => {
+        let score = 0;
+        if (actionPattern.test(line)) score += 4;
+        if (deadlinePattern.test(line)) score += 2;
+        if (line.length >= 8 && line.length <= 90) score += 1;
+        if (/^(收到|好的|ok|OK|嗯|谢谢|辛苦了)$/.test(line)) score -= 5;
+        return { line, score, index };
+      })
+      .sort((a, b) => b.score - a.score || a.index - b.index);
 
-    const parts = [`事项：${compactText(summary || value, 64)}`];
-    if (dueTime && !dueTime.startsWith("未识别")) parts.push(`时间：${dueTime}`);
-    if (people.length) parts.push(`相关人：${people.join("、")}`);
-    if (keywords.length) parts.push(`类型：${keywords.join("、")}`);
-    if (details.length) parts.push(`补充：${details.join("；")}`);
-    return parts.join(" ｜ ");
+    const candidate = ranked[0]?.line || value;
+    return compactText(cleanKeyPoint(candidate), 96) || compactText(cleanKeyPoint(value), 96);
+  }
+
+  function inferInsight(text) {
+    return extractKeyPoint(text);
   }
 
   function inferFields(text) {
@@ -198,7 +210,7 @@
       summary: inferSummary(source),
       recordTime: formatDateTime(new Date()),
       dueTime,
-      insight: inferInsight(source, dueTime),
+      insight: inferInsight(source),
       original: source,
     };
   }
@@ -284,7 +296,7 @@
       node.querySelector(".status-pill").textContent = record.status === "done" ? "已完成" : "未完成";
       node.querySelector('[data-field="recordTime"]').textContent = record.recordTime || "-";
       node.querySelector('[data-field="dueTime"]').value = record.dueTime || "";
-      node.querySelector('[data-field="insight"]').textContent = (record.insight || record.summary || "未识别，可从原文确认").replace(/…/g, "");
+      node.querySelector('[data-field="insight"]').textContent = extractKeyPoint(record.insight || record.summary || record.original || "未识别，可从原文确认").replace(/…/g, "");
       node.querySelector('[data-field="original"]').textContent = record.original || "-";
       fragment.append(node);
     }
@@ -342,7 +354,7 @@
             summary: item.summary || inferSummary(item.original),
             recordTime: item.recordTime || formatDateTime(new Date()),
             dueTime: item.dueTime || parseDueTime(item.original),
-            insight: item.insight || inferInsight(item.original, item.dueTime || parseDueTime(item.original)),
+            insight: item.insight || inferInsight(item.original),
             original: item.original,
           }));
         records = [...normalized, ...records];
