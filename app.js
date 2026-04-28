@@ -281,7 +281,6 @@
       const node = els.template.content.firstElementChild.cloneNode(true);
       node.dataset.id = record.id;
       node.classList.toggle("done", record.status === "done");
-      node.querySelector("h3").textContent = "信息提炼";
       node.querySelector(".status-pill").textContent = record.status === "done" ? "已完成" : "未完成";
       node.querySelector('[data-field="recordTime"]').textContent = record.recordTime || "-";
       node.querySelector('[data-field="dueTime"]').value = record.dueTime || "";
