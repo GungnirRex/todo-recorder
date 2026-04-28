@@ -1,19 +1,19 @@
 :root {
-  --bg: #fff8f3;
-  --surface: #fffdfb;
-  --surface-soft: #fff1f7;
-  --surface-muted: #fff6df;
-  --text: #3d3038;
-  --muted: #7d6e77;
-  --line: #f2dce5;
-  --primary: #ff7aa8;
-  --primary-dark: #ed5f91;
-  --mint: #74d6bd;
-  --accent: #5fa8ff;
-  --danger: #ff6d75;
-  --danger-dark: #e95862;
-  --shadow: 0 20px 48px rgba(181, 111, 130, 0.16);
-  --focus: 0 0 0 3px rgba(255, 122, 168, 0.22);
+  --bg: #f4fbff;
+  --surface: #fcfeff;
+  --surface-soft: #eef8ff;
+  --surface-muted: #edf8fb;
+  --text: #243948;
+  --muted: #667987;
+  --line: #cfe7f6;
+  --primary: #63b3ed;
+  --primary-dark: #3d91d8;
+  --mint: #7ed8c5;
+  --accent: #9cc7ff;
+  --danger: #5f8fd6;
+  --danger-dark: #3f72bd;
+  --shadow: 0 20px 48px rgba(63, 145, 216, 0.15);
+  --focus: 0 0 0 3px rgba(99, 179, 237, 0.24);
   font-family:
     Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
 }
@@ -25,8 +25,8 @@
 body {
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(255, 215, 235, 0.88) 0, rgba(255, 248, 243, 0.92) 320px, rgba(243, 251, 255, 0.95) 100%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.42) 0 10px, rgba(255, 235, 205, 0.24) 10px 20px),
+    linear-gradient(180deg, rgba(215, 238, 255, 0.9) 0, rgba(244, 251, 255, 0.95) 320px, rgba(239, 253, 250, 0.95) 100%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.44) 0 10px, rgba(214, 236, 249, 0.28) 10px 20px),
     var(--bg);
   color: var(--text);
 }
@@ -55,10 +55,10 @@ button {
   max-width: 1040px;
   margin: 0 auto 20px;
   padding: 16px 18px;
-  background: rgba(255, 253, 251, 0.72);
-  border: 1px solid rgba(242, 220, 229, 0.9);
+  background: rgba(252, 254, 255, 0.76);
+  border: 1px solid rgba(207, 231, 246, 0.92);
   border-radius: 8px;
-  box-shadow: 0 10px 28px rgba(181, 111, 130, 0.1);
+  box-shadow: 0 10px 28px rgba(63, 145, 216, 0.1);
   backdrop-filter: blur(10px);
 }
 
@@ -72,7 +72,7 @@ p {
 h1 {
   font-size: 32px;
   line-height: 1.15;
-  color: #3f2d39;
+  color: #213b4f;
 }
 
 h2 {
@@ -108,7 +108,7 @@ h2 {
 
 .compose-panel,
 .records-panel {
-  background: rgba(255, 253, 251, 0.94);
+  background: rgba(252, 254, 255, 0.94);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -116,11 +116,11 @@ h2 {
 }
 
 .compose-panel {
-  border-color: #f7cfe0;
+  border-color: #bfe0f4;
 }
 
 .records-panel {
-  background: rgba(255, 253, 251, 0.88);
+  background: rgba(252, 254, 255, 0.9);
 }
 
 .panel-heading {
@@ -138,7 +138,7 @@ h2 {
 }
 
 .field span {
-  color: #6d5262;
+  color: #446477;
   font-size: 13px;
   font-weight: 700;
 }
@@ -187,17 +187,17 @@ button:focus-visible {
 .icon-btn {
   min-width: 40px;
   padding: 0 10px;
-  background: #fff7fb;
-  border-color: #f5cada;
-  color: #7a5263;
-  box-shadow: 0 5px 12px rgba(181, 111, 130, 0.1);
+  background: #f2f9ff;
+  border-color: #bdddf2;
+  color: #426a83;
+  box-shadow: 0 5px 12px rgba(63, 145, 216, 0.1);
   font-size: 12px;
   font-weight: 800;
 }
 
 .icon-btn:hover {
-  background: #ffeaf3;
-  border-color: #f2b9ce;
+  background: #e5f5ff;
+  border-color: #9fd1ef;
   transform: translateY(-1px);
 }
 
@@ -214,35 +214,35 @@ button:focus-visible {
 }
 
 .primary-btn {
-  background: linear-gradient(180deg, #ff8db5, var(--primary-dark));
+  background: linear-gradient(180deg, #75c5f5, var(--primary-dark));
   color: #fff;
-  border-color: #ef6d9a;
+  border-color: #4da5df;
   padding: 0 18px;
   font-weight: 700;
-  box-shadow: 0 10px 18px rgba(237, 95, 145, 0.22);
+  box-shadow: 0 10px 18px rgba(61, 145, 216, 0.22);
 }
 
 .primary-btn:hover {
-  background: linear-gradient(180deg, #ff7fab, #dd4f80);
+  background: linear-gradient(180deg, #5bb9ef, #2f82cc);
   transform: translateY(-1px);
 }
 
 .text-btn {
-  background: #fff8df;
-  color: #8a6540;
-  border-color: #f2ddb0;
+  background: #edf8fb;
+  color: #3c6d7a;
+  border-color: #bfdee7;
   padding: 0 12px;
   font-weight: 700;
 }
 
 .text-btn:hover {
-  background: #ffefbd;
+  background: #def2f7;
 }
 
 .danger-btn {
-  background: #fff2f3;
+  background: #eef6ff;
   color: var(--danger);
-  border-color: #ffd0d4;
+  border-color: #c7def7;
   padding: 0 12px;
   font-weight: 700;
 }
@@ -267,7 +267,7 @@ button:focus-visible {
 
 .tools select {
   width: 120px;
-  background: #fff7fb;
+  background: #f2f9ff;
 }
 
 .record-list {
@@ -279,20 +279,20 @@ button:focus-visible {
   min-height: 380px;
   display: grid;
   place-items: center;
-  border: 1px dashed #efbfd3;
+  border: 1px dashed #a9d3ee;
   border-radius: 8px;
-  background: #fff8e8;
+  background: #f0fbff;
   color: var(--muted);
   text-align: center;
   padding: 28px;
 }
 
 .todo-item {
-  background: linear-gradient(180deg, #ffffff 0, #fffafc 100%);
-  border: 1px solid #f3d8e3;
+  background: linear-gradient(180deg, #ffffff 0, #f7fcff 100%);
+  border: 1px solid #cfe7f6;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 10px 24px rgba(181, 111, 130, 0.1);
+  box-shadow: 0 10px 24px rgba(63, 145, 216, 0.1);
 }
 
 .todo-main {
@@ -304,9 +304,9 @@ button:focus-visible {
 .check-btn {
   width: 28px;
   height: 28px;
-  border: 2px solid #f2b9ce;
+  border: 2px solid #9fd1ef;
   border-radius: 50%;
-  background: #fff7fb;
+  background: #f2f9ff;
   margin-top: 1px;
 }
 
@@ -331,10 +331,10 @@ button:focus-visible {
 .insight-highlight {
   margin-top: 8px;
   padding: 14px;
-  border: 1px solid #ffd0df;
+  border: 1px solid #c5e4f7;
   border-radius: 8px;
-  background: linear-gradient(180deg, #fff3f8, #fffafc);
-  color: #3f2d39;
+  background: linear-gradient(180deg, #eef8ff, #fbfeff);
+  color: #243948;
   font-size: 16px;
   font-weight: 700;
   line-height: 1.65;
@@ -345,8 +345,8 @@ button:focus-visible {
 .status-pill {
   flex: 0 0 auto;
   border-radius: 999px;
-  background: #fff0c7;
-  color: #9d6b1f;
+  background: #eaf6ff;
+  color: #2f78a7;
   font-size: 12px;
   line-height: 1;
   padding: 6px 9px;
@@ -376,7 +376,7 @@ button:focus-visible {
 }
 
 dt {
-  color: #8a7780;
+  color: #668092;
   font-size: 12px;
   line-height: 1.2;
 }
@@ -393,9 +393,9 @@ dd {
   align-items: center;
   min-height: 38px;
   padding: 7px 9px;
-  border: 1px solid #f4cada;
+  border: 1px solid #c7e3f5;
   border-radius: 8px;
-  background: #fffafc;
+  background: #f9fdff;
 }
 
 .due-time-input {
@@ -419,7 +419,7 @@ dd {
 .row-actions {
   justify-content: flex-end;
   margin-top: 10px;
-  border-top: 1px solid #f4dde6;
+  border-top: 1px solid #d7eaf6;
   padding-top: 8px;
 }
 
@@ -428,7 +428,7 @@ dd {
   left: 50%;
   bottom: 24px;
   transform: translateX(-50%) translateY(18px);
-  background: #4a3440;
+  background: #243948;
   color: #fff;
   padding: 10px 14px;
   border-radius: 8px;
