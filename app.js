@@ -34,9 +34,9 @@
     return text.replace(/\r/g, "\n").replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
   }
 
-  function clip(text, length) {
-    const value = cleanText(text);
-    return value.length > length ? `${value.slice(0, length - 1)}…` : value;
+  function compactText(text, length) {
+    const value = cleanText(text).replace(/[。！？!?；;，,、]+/g, " ");
+    return value.length > length ? value.slice(0, length).trim() : value;
   }
 
   function loadRecords() {
@@ -162,7 +162,7 @@
     if (!sentences.length) return "";
     const taskLike = sentences.find((line) => /(需要|请|麻烦|记得|安排|完成|提交|确认|跟进|处理|整理|发送|发给|回复|预约|开会|对接|更新)/.test(line));
     const candidate = taskLike || sentences[0];
-    return clip(candidate.replace(/^(hi|你好|收到|备注|todo|待办)[:：\s-]*/i, ""), 34);
+    return compactText(candidate.replace(/^(hi|你好|收到|备注|todo|待办)[:：\s-]*/i, ""), 64);
   }
 
   function inferInsight(text, dueTime) {
@@ -181,17 +181,14 @@
       .filter(([, pattern]) => pattern.test(value))
       .map(([label]) => label);
 
-    const details = sentences
-      .filter((line) => line !== summary)
-      .slice(0, 2)
-      .map((line) => clip(line, 42));
+    const details = sentences.filter((line) => line !== summary).slice(0, 1).map((line) => compactText(line, 56));
 
-    const parts = [`事项：${summary || clip(value, 28)}`];
+    const parts = [`事项：${compactText(summary || value, 64)}`];
     if (dueTime && !dueTime.startsWith("未识别")) parts.push(`时间：${dueTime}`);
     if (people.length) parts.push(`相关人：${people.join("、")}`);
     if (keywords.length) parts.push(`类型：${keywords.join("、")}`);
     if (details.length) parts.push(`补充：${details.join("；")}`);
-    return parts.join("\n");
+    return parts.join(" ｜ ");
   }
 
   function inferFields(text) {
@@ -284,11 +281,11 @@
       const node = els.template.content.firstElementChild.cloneNode(true);
       node.dataset.id = record.id;
       node.classList.toggle("done", record.status === "done");
-      node.querySelector("h3").textContent = record.summary || "未命名代办";
+      node.querySelector("h3").textContent = "信息提炼";
       node.querySelector(".status-pill").textContent = record.status === "done" ? "已完成" : "未完成";
       node.querySelector('[data-field="recordTime"]').textContent = record.recordTime || "-";
-      node.querySelector('[data-field="dueTime"]').textContent = record.dueTime || "-";
-      node.querySelector('[data-field="insight"]').textContent = record.insight || "-";
+      node.querySelector('[data-field="dueTime"]').value = record.dueTime || "";
+      node.querySelector('[data-field="insight"]').textContent = (record.insight || record.summary || "未识别，可从原文确认").replace(/…/g, "");
       node.querySelector('[data-field="original"]').textContent = record.original || "-";
       fragment.append(node);
     }
@@ -399,6 +396,18 @@
         renderRecords();
         showToast("已删除");
       }
+    });
+
+    els.list.addEventListener("change", (event) => {
+      const input = event.target.closest('[data-field="dueTime"]');
+      if (!input) return;
+      const item = input.closest(".todo-item");
+      const record = records.find((entry) => entry.id === item?.dataset.id);
+      if (!record) return;
+      record.dueTime = cleanText(input.value);
+      record.updatedAt = new Date().toISOString();
+      persistRecords();
+      showToast("计划完成时间已保存");
     });
   }
 

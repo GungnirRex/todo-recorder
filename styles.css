@@ -334,6 +334,20 @@ button:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.insight-highlight {
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid #ffd0df;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff3f8, #fffafc);
+  color: #3f2d39;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .status-pill {
   flex: 0 0 auto;
   border-radius: 999px;
@@ -372,6 +386,13 @@ dd {
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.due-time-input {
+  min-height: 34px;
+  padding: 7px 9px;
+  border-color: #f4cada;
+  background: #fffafc;
 }
 
 .original-block dd {

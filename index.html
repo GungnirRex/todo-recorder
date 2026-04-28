@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>小段的待办事项记录\("▔□▔)/</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260428-2" />
   </head>
   <body>
     <div class="app-shell">
@@ -78,6 +78,7 @@
               <h3></h3>
               <span class="status-pill"></span>
             </div>
+            <p class="insight-highlight" data-field="insight"></p>
             <dl>
               <div>
                 <dt>记录时间</dt>
@@ -85,11 +86,9 @@
               </div>
               <div>
                 <dt>计划完成</dt>
-                <dd data-field="dueTime"></dd>
-              </div>
-              <div class="full">
-                <dt>信息提炼</dt>
-                <dd data-field="insight"></dd>
+                <dd>
+                  <input class="due-time-input" data-field="dueTime" type="text" aria-label="计划完成时间" />
+                </dd>
               </div>
               <div class="full original-block">
                 <dt>代办原文</dt>
@@ -104,6 +103,6 @@
       </article>
     </template>
 
-    <script src="./app.js"></script>
+    <script src="./app.js?v=20260428-2"></script>
   </body>
 </html>
