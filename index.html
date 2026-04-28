@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>代办事项记录</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>代办事项记录</h1>
+          <p>粘贴原文后自动整理字段，数据保存在当前浏览器。</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="copyAppLinkBtn" type="button" title="复制网页链接" aria-label="复制网页链接">
+            <span aria-hidden="true">🔗</span>
+          </button>
+          <button class="icon-btn" id="exportJsonBtn" type="button" title="导出 JSON" aria-label="导出 JSON">
+            <span aria-hidden="true">⬇</span>
+          </button>
+          <button class="icon-btn" id="exportCsvBtn" type="button" title="导出 CSV" aria-label="导出 CSV">
+            <span aria-hidden="true">表</span>
+          </button>
+          <label class="icon-btn file-btn" title="导入 JSON" aria-label="导入 JSON">
+            <span aria-hidden="true">⬆</span>
+            <input id="importFile" type="file" accept="application/json,.json" />
+          </label>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="compose-panel" aria-labelledby="composeTitle">
+          <div class="panel-heading">
+            <h2 id="composeTitle">新增代办</h2>
+            <button class="text-btn" id="clearDraftBtn" type="button">清空</button>
+          </div>
+
+          <label class="field">
+            <span>粘贴内容</span>
+            <textarea id="sourceInput" rows="9" placeholder="把聊天记录、邮件、会议纪要或任务描述粘贴到这里"></textarea>
+          </label>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>代办总结</span>
+              <input id="summaryInput" type="text" />
+            </label>
+            <label class="field">
+              <span>记录时间</span>
+              <input id="recordTimeInput" type="text" />
+            </label>
+            <label class="field">
+              <span>计划完成时间</span>
+              <input id="dueTimeInput" type="text" />
+            </label>
+            <label class="field">
+              <span>信息提炼</span>
+              <textarea id="insightInput" rows="4"></textarea>
+            </label>
+          </div>
+
+          <div class="compose-actions">
+            <button class="primary-btn" id="saveBtn" type="button">保存代办</button>
+            <button class="secondary-btn" id="copyRecordLinkBtn" type="button">复制当前代办链接</button>
+          </div>
+        </section>
+
+        <section class="records-panel" aria-labelledby="recordsTitle">
+          <div class="panel-heading">
+            <div>
+              <h2 id="recordsTitle">记录</h2>
+              <p id="recordCount">0 条</p>
+            </div>
+            <div class="tools">
+              <input id="searchInput" type="search" placeholder="搜索" aria-label="搜索记录" />
+              <select id="statusFilter" aria-label="状态筛选">
+                <option value="all">全部</option>
+                <option value="open">未完成</option>
+                <option value="done">已完成</option>
+              </select>
+            </div>
+          </div>
+          <div class="record-list" id="recordList" aria-live="polite"></div>
+        </section>
+      </main>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <template id="recordTemplate">
+      <article class="todo-item">
+        <div class="todo-main">
+          <button class="check-btn" type="button" aria-label="切换完成状态"></button>
+          <div class="todo-content">
+            <div class="todo-title-row">
+              <h3></h3>
+              <span class="status-pill"></span>
+            </div>
+            <dl>
+              <div>
+                <dt>记录时间</dt>
+                <dd data-field="recordTime"></dd>
+              </div>
+              <div>
+                <dt>计划完成</dt>
+                <dd data-field="dueTime"></dd>
+              </div>
+              <div class="full">
+                <dt>信息提炼</dt>
+                <dd data-field="insight"></dd>
+              </div>
+              <div class="full original-block">
+                <dt>代办原文</dt>
+                <dd data-field="original"></dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="row-actions">
+          <button class="text-btn" data-action="edit" type="button">编辑</button>
+          <button class="text-btn" data-action="share" type="button">分享</button>
+          <button class="danger-btn" data-action="delete" type="button">删除</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
