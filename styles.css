@@ -149,19 +149,8 @@ button:focus-visible {
   box-shadow: var(--focus);
 }
 
-.field-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 12px;
-}
-
-.field-grid .field:nth-child(4) {
-  grid-column: 1 / -1;
-}
-
 .icon-btn,
 .primary-btn,
-.secondary-btn,
 .text-btn,
 .danger-btn {
   min-height: 38px;
@@ -203,13 +192,6 @@ button:focus-visible {
 
 .primary-btn:hover {
   background: var(--primary-dark);
-}
-
-.secondary-btn {
-  background: #fff;
-  color: var(--primary);
-  border-color: rgba(11, 111, 92, 0.35);
-  padding: 0 14px;
 }
 
 .text-btn {
@@ -415,7 +397,6 @@ dd {
     padding: 14px;
   }
 
-  .field-grid,
   dl {
     grid-template-columns: 1fr;
   }

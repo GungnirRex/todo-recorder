@@ -5,10 +5,6 @@
 
   const els = {
     source: $("#sourceInput"),
-    summary: $("#summaryInput"),
-    recordTime: $("#recordTimeInput"),
-    dueTime: $("#dueTimeInput"),
-    insight: $("#insightInput"),
     save: $("#saveBtn"),
     clearDraft: $("#clearDraftBtn"),
     list: $("#recordList"),
@@ -19,13 +15,11 @@
     exportCsv: $("#exportCsvBtn"),
     importFile: $("#importFile"),
     copyAppLink: $("#copyAppLinkBtn"),
-    copyRecordLink: $("#copyRecordLinkBtn"),
     toast: $("#toast"),
     template: $("#recordTemplate"),
   };
 
   let records = loadRecords();
-  let editingId = null;
   let toastTimer = null;
 
   function pad(value) {
@@ -214,21 +208,11 @@
 
   function setDraft(record) {
     els.source.value = record.original || "";
-    els.summary.value = record.summary || "";
-    els.recordTime.value = record.recordTime || formatDateTime(new Date());
-    els.dueTime.value = record.dueTime || "";
-    els.insight.value = record.insight || "";
     persistDraft();
   }
 
   function collectDraft() {
-    return {
-      summary: cleanText(els.summary.value),
-      recordTime: cleanText(els.recordTime.value),
-      dueTime: cleanText(els.dueTime.value),
-      insight: cleanText(els.insight.value),
-      original: cleanText(els.source.value),
-    };
+    return inferFields(els.source.value);
   }
 
   function showToast(message) {
@@ -247,35 +231,6 @@
     }
   }
 
-  function encodePayload(payload) {
-    return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  }
-
-  function decodePayload(value) {
-    try {
-      return JSON.parse(decodeURIComponent(escape(atob(value))));
-    } catch {
-      return null;
-    }
-  }
-
-  function recordToShareUrl(record) {
-    const url = new URL(window.location.href);
-    url.hash = `record=${encodePayload(record)}`;
-    return url.toString();
-  }
-
-  function restoreSharedRecord() {
-    const hash = window.location.hash.replace(/^#record=/, "");
-    if (!hash) return false;
-    const payload = decodePayload(hash);
-    if (!payload || !payload.original) return false;
-    setDraft(payload);
-    showToast("已从分享链接载入代办内容");
-    history.replaceState(null, "", window.location.pathname + window.location.search);
-    return true;
-  }
-
   function saveRecord() {
     const draft = collectDraft();
     if (!draft.original) {
@@ -284,22 +239,15 @@
       return;
     }
     const record = {
-      id: editingId || crypto.randomUUID(),
-      status: editingId ? records.find((item) => item.id === editingId)?.status || "open" : "open",
-      createdAt: editingId ? records.find((item) => item.id === editingId)?.createdAt || new Date().toISOString() : new Date().toISOString(),
+      id: crypto.randomUUID(),
+      status: "open",
+      createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       ...draft,
     };
 
-    if (editingId) {
-      records = records.map((item) => (item.id === editingId ? record : item));
-      editingId = null;
-      els.save.textContent = "保存代办";
-      showToast("已更新");
-    } else {
-      records.unshift(record);
-      showToast("已保存");
-    }
+    records.unshift(record);
+    showToast("已保存");
     persistRecords();
     localStorage.removeItem(draftKey);
     clearDraft(false);
@@ -307,9 +255,7 @@
   }
 
   function clearDraft(showMessage = true) {
-    editingId = null;
-    els.save.textContent = "保存代办";
-    setDraft({ recordTime: formatDateTime(new Date()) });
+    setDraft({});
     localStorage.removeItem(draftKey);
     if (showMessage) showToast("已清空");
   }
@@ -417,23 +363,7 @@
   }
 
   function attachEvents() {
-    els.source.addEventListener("input", () => {
-      const value = cleanText(els.source.value);
-      if (!value) {
-        persistDraft();
-        return;
-      }
-      const inferred = inferFields(value);
-      els.summary.value = inferred.summary;
-      els.recordTime.value = inferred.recordTime;
-      els.dueTime.value = inferred.dueTime;
-      els.insight.value = inferred.insight;
-      persistDraft();
-    });
-
-    [els.summary, els.recordTime, els.dueTime, els.insight].forEach((input) => {
-      input.addEventListener("input", persistDraft);
-    });
+    els.source.addEventListener("input", persistDraft);
 
     els.save.addEventListener("click", saveRecord);
     els.clearDraft.addEventListener("click", () => clearDraft(true));
@@ -447,15 +377,6 @@
       url.hash = "";
       copyText(url.toString(), "已复制网页链接");
     });
-    els.copyRecordLink.addEventListener("click", () => {
-      const draft = collectDraft();
-      if (!draft.original) {
-        showToast("请先粘贴代办原文");
-        return;
-      }
-      copyText(recordToShareUrl(draft), "已复制当前代办链接");
-    });
-
     els.list.addEventListener("click", (event) => {
       const item = event.target.closest(".todo-item");
       if (!item) return;
@@ -470,16 +391,8 @@
         return;
       }
 
-      const action = event.target.dataset.action;
-      if (action === "edit") {
-        editingId = record.id;
-        els.save.textContent = "更新代办";
-        setDraft(record);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      if (action === "share") {
-        copyText(recordToShareUrl(record), "已复制代办分享链接");
-      }
+      const actionButton = event.target.closest("[data-action]");
+      const action = actionButton?.dataset.action;
       if (action === "delete") {
         records = records.filter((entry) => entry.id !== record.id);
         persistRecords();
@@ -491,12 +404,7 @@
 
   function init() {
     attachEvents();
-    const restoredFromShare = restoreSharedRecord();
-    if (!restoredFromShare) {
-      const draft = loadDraft();
-      if (draft.original || draft.summary) setDraft(draft);
-      else setDraft({ recordTime: formatDateTime(new Date()) });
-    }
+    setDraft(loadDraft());
     renderRecords();
   }
 
