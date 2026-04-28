@@ -357,36 +357,55 @@ button:focus-visible {
   color: #248a70;
 }
 
-dl {
+.record-meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 14px;
-  margin: 12px 0 0;
+  gap: 12px;
+  margin: 14px 0 0;
 }
 
-dl div.full {
+.record-meta div.full {
   grid-column: 1 / -1;
+}
+
+.meta-item {
+  display: grid;
+  grid-template-rows: auto 38px;
+  gap: 5px;
+  min-width: 0;
 }
 
 dt {
   color: #8a7780;
   font-size: 12px;
-  margin-bottom: 4px;
+  line-height: 1.2;
 }
 
 dd {
   margin: 0;
   color: var(--text);
-  line-height: 1.5;
-  white-space: pre-wrap;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
-.due-time-input {
-  min-height: 34px;
+.meta-item dd {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
   padding: 7px 9px;
-  border-color: #f4cada;
+  border: 1px solid #f4cada;
+  border-radius: 8px;
   background: #fffafc;
+}
+
+.due-time-input {
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .original-block dd {
@@ -450,7 +469,7 @@ dd {
     padding: 14px;
   }
 
-  dl {
+  .record-meta {
     grid-template-columns: 1fr;
   }
 
